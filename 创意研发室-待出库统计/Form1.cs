@@ -21,7 +21,7 @@ namespace 创意研发室_待出库统计
         private string GetFileName()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "XLS文件(*.xls)|*.xls;*.xlsx";
+            ofd.Filter = "XLS文件(*.xls;*.xlsx)|*.xls;*.xlsx";
             string OpenFile= Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             ofd.InitialDirectory = OpenFile;
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -30,6 +30,18 @@ namespace 创意研发室_待出库统计
             }
             else
                 return "获取失败";
+        }
+        private string GetSaveFile()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "XLS文件(*.xls)|*.xls";
+            string SaveFile = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            sfd.InitialDirectory = SaveFile;
+            if(sfd.ShowDialog()==DialogResult.OK)
+            {
+                return sfd.FileName;
+            }
+            return "获取失败";
         }
         private void AddMasterTable(string ExcelFileName)
         {
@@ -63,6 +75,10 @@ namespace 创意研发室_待出库统计
                 }
             }
         }
+        private void SaveExcel(string FileName,DataTable SaveTable)
+        {
+            npe.DataTableToExcel(SaveTable, FileName);
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             string FileName = GetFileName();
@@ -78,6 +94,16 @@ namespace 创意研发室_待出库统计
             MasterTable.Columns.Add("产品编号");
             MasterTable.Columns.Add("产品名称");
             MasterTable.Columns.Add("数量");
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string FileName = GetSaveFile();
+            if(FileName!="获取失败")
+            {
+                SaveExcel(FileName, MasterTable);
+                MessageBox.Show("保存成功");
+            }
         }
     }
 }
